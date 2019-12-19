@@ -6,16 +6,16 @@
       <img src="../../assets/img/logo_admin.png" alt />
     </div>
     <!-- logo下的整体 -->
-    <el-menu>
+    <el-menu  style="width:231px"
+        background-color="#353b4e"
+        text-color="#adafb5"
+        active-text-color="#ffd04b">
       <!-- 导航组件 -->
       <!-- 第一行 -->
       <el-menu-item>首页</el-menu-item>
       <!-- 第二行 -->
       <el-submenu
-        style="width:231px"
-        background-color="#353b4e"
-        text-color="#adafb5"
-        active-text-color="#ffd04b"
+
       >
         <span slot="title">内容管理</span>
         <el-menu-item>发布文章</el-menu-item>
@@ -45,6 +45,7 @@ export default {}
 //lang='less'指当前可以写less格式的样式  scoped：指这里设置的样式只能在当前使用
 .layout-aside {
   width: 230px;
+
   .title {
     text-align: center;
     background-color: #2e2f32;
