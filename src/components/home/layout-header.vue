@@ -13,7 +13,8 @@
             <img :src="userInfo.photo?userInfo.photo:defaultImg" alt="">
 
              <!-- 下拉菜单 -->
-             <el-dropdown>
+             <!-- EelementUI用了@command这个方法  所以这里也调用了 -->
+             <el-dropdown @command="handle">
                  <span>{{userInfo.name}}
                      <i class="el-icon-arrow-down el-icon--right"></i>
                  </span>
@@ -21,10 +22,10 @@
                  <!-- 下拉菜单  具名插槽 -->
                  <el-dropdown-menu slot="dropdown">
                      <!-- 下拉内容 -->
-
-                      <el-dropdown-item>个人信息</el-dropdown-item>
-                      <el-dropdown-item>Git地址</el-dropdown-item>
-                      <el-dropdown-item>退出</el-dropdown-item>
+                    <!-- command区分菜单的点击项 -->
+                      <el-dropdown-item command='info'>个人信息</el-dropdown-item>
+                      <el-dropdown-item command='git'>Git地址</el-dropdown-item>
+                      <el-dropdown-item command='lgout'>退出</el-dropdown-item>
                  </el-dropdown-menu>
             </el-dropdown>
           </el-row>
@@ -43,7 +44,7 @@ export default {
       defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量
     }
   },
-  // 生命周期  钩子函数
+  // 生命周期  钩子函数   创建
   created () {
     // 获取令牌
     let token = window.localStorage.getItem('user-token')
@@ -59,6 +60,19 @@ export default {
       // 返回一个对象   它里面有一个data，data里面还有一个data 才是我们需要的数据
       this.userInfo = result.data.data// 获取用户个人信息
     })
+  },
+  methods: {
+    handle (command) {
+      if (command === 'lgout') {
+        // 退出当前页面到登录页面  并删除用户令牌
+        window.localStorage.removeItem('user-token')
+        // 回到登录页面
+        this.$router.push('/login')
+      } else if (command === 'git') {
+        // 否则跳转到这个页面
+        window.location.href = 'https://www.baidu.com/'
+      }
+    }
   }
 
 }

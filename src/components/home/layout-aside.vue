@@ -6,17 +6,18 @@
       <img src="../../assets/img/logo_admin.png" alt />
     </div>
     <!-- logo下的整体 -->
+    <!-- router开启路由  完整写法  :router='true'  -->
     <el-menu  style="width:231px"
         background-color="#353b4e"
         text-color="#adafb5"
         active-text-color="#ffd04b">
       <!-- 导航组件 -->
       <!-- 第一行 -->
+      <!--  -->
       <el-menu-item>首页</el-menu-item>
       <!-- 第二行 -->
-      <el-submenu
+      <el-submenu>
 
-      >
         <span slot="title">内容管理</span>
         <el-menu-item>发布文章</el-menu-item>
         <el-menu-item>内容列表</el-menu-item>
