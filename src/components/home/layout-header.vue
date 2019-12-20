@@ -1,5 +1,5 @@
 <template>
-  <!-- 头部导航 -->
+  <!-- 头部导航    justify左右对齐方式    align上下对齐方式-->
   <el-row type="flex" class="layout-header" justify="space-between" align="middle">
       <!-- 左侧 -->
       <el-col class='left' :span="10">

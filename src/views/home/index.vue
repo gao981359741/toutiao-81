@@ -20,13 +20,11 @@
 </template>
 
 <script>
-import layoutAside from '../../components/home/layout-aside' // 引入
-import layoutHeader from '../../components/home/layout-header'
+
 // 导出
 export default {
   components: {
-    'layout-aside': layoutAside,
-    'layout-header': layoutHeader
+
   }
 }
 </script>
