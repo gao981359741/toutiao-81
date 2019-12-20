@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/home'
-import Login from '../views/login'
+import Home from '../views/home'// 登录后页面的组件
+import Login from '../views/login'// 登录页面的组件
+import Home2 from '../views/home/home'// 默认背景的组件
 Vue.use(VueRouter)
 
 const routes = [
@@ -14,7 +15,12 @@ const routes = [
     // 主页
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    children: [{
+      path: '', // 二级路由什么都不写  作为显示组件
+      component: Home2
+    }]
+
   }, {
     // 登陆页
     path: '/login',
