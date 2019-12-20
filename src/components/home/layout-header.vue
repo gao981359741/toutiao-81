@@ -10,10 +10,11 @@
        <!-- 右侧 -->
       <el-col class='right' :span="4">
           <el-row type='flex' justify="end" align="middle">
-            <img src="../../assets/img/db.jpg" alt="">
+            <img :src="userInfo.photo?userInfo.photo:defaultImg" alt="">
+
              <!-- 下拉菜单 -->
              <el-dropdown>
-                 <span>乖，摸摸头
+                 <span>{{userInfo.name}}
                      <i class="el-icon-arrow-down el-icon--right"></i>
                  </span>
 
@@ -33,7 +34,32 @@
 </template>
 
 <script>
+
 export default {
+  data () {
+    // 返回值 是对象形式
+    return {
+      userInfo: {}, // 用户信息
+      defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量
+    }
+  },
+  // 生命周期  钩子函数
+  created () {
+    // 获取令牌
+    let token = window.localStorage.getItem('user-token')
+    // 查询数据
+    this.$axios({
+      url: '/user/profile',
+      // 传递headers参数
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(result => {
+      console.log(result)
+      // 返回一个对象   它里面有一个data，data里面还有一个data 才是我们需要的数据
+      this.userInfo = result.data.data// 获取用户个人信息
+    })
+  }
 
 }
 </script>
