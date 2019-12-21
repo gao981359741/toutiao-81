@@ -19,6 +19,10 @@ const routes = [
     children: [{
       path: '', // 二级路由什么都不写  作为显示组件
       component: Home2
+    }, {
+      // 二级路由表
+      path: 'comment',
+      comment: () => import('../views/comment')
     }]
 
   }, {
