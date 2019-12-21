@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/home'// 登录后页面的组件
 import Login from '../views/login'// 登录页面的组件
 import Home2 from '../views/home/home'// 默认背景的组件
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -22,7 +23,7 @@ const routes = [
     }, {
       // 二级路由表
       path: 'comment',
-      comment: () => import('../views/comment')
+      component: () => import('../views/comment')
     }]
 
   }, {
