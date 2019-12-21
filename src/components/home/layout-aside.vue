@@ -46,6 +46,7 @@ export default {}
 //lang='less'指当前可以写less格式的样式  scoped：指这里设置的样式只能在当前使用
 .layout-aside {
   width: 230px;
+  overflow: hidden;
 
   .title {
     text-align: center;
