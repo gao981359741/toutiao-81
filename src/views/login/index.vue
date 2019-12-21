@@ -88,14 +88,15 @@ export default {
             window.localStorage.setItem('user-token', result.data.token)// 获取前端缓存令牌
             this.$router.push('/home')// 跳转到主页
             // 失败后进入catch
-          }).catch(error => {
-            console.log(error)
-            // message是elementUI的方法
-            this.$message({
-              message: '您的手机号或验证码不正确',
-              type: 'warning'
-            })
           })
+          // .catch(error => {
+          //   console.log(error)
+          //   // message是elementUI的方法
+          //   this.$message({
+          //     message: '您的手机号或验证码不正确',
+          //     type: 'warning'
+          //   })
+          // })
         }
       })
     }
