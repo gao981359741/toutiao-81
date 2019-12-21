@@ -47,14 +47,14 @@ export default {
   // 生命周期  钩子函数   创建
   created () {
     // 获取令牌
-    let token = window.localStorage.getItem('user-token')
+    // let token = window.localStorage.getItem('user-token')
     // 查询数据
     this.$axios({
-      url: '/user/profile',
+      url: '/user/profile'
       // 传递headers参数
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      // headers: {
+      //   Authorization: `Bearer ${token}`
+      // }
     }).then(result => {
       console.log(result)
       // 返回一个对象   它里面有一个data，data里面还有一个data 才是我们需要的数据
