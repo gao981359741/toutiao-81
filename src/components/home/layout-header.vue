@@ -58,7 +58,7 @@ export default {
     }).then(result => {
       console.log(result)
       // 返回一个对象   它里面有一个data，data里面还有一个data 才是我们需要的数据
-      this.userInfo = result.data.data// 获取用户个人信息
+      this.userInfo = result.data// 获取用户个人信息
     })
   },
   methods: {

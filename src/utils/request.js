@@ -6,10 +6,18 @@ axios.interceptors.request.use(function (config) {
   // 执行请求ok
   // 获取token
   let token = window.localStorage.getItem('user-token')
-  // config是axios的所有配置项   统一注入token
+  // config是axios的所有配置项   统一注入token  注入请求参数
   config.headers.Authorization = `Bearer ${token}`
   // 返回的config就会作为新的请求选项去进行请求
   return config
 }, function () {
 
 })
+// 响应拦截
+axios.interceptors.response.use(function (response) {
+  // 成功时执行
+  return response.data ? response.data : {}
+}, function () {
+  // 失败时执行
+})
+export default axios

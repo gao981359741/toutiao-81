@@ -85,7 +85,7 @@ export default {
             // 成功后进入then
           }).then(result => {
             // localStorage本地缓存  特点：关闭浏览器数据不会消失，除非手动删除数据
-            window.localStorage.setItem('user-token', result.data.data.token)// 获取前端缓存令牌
+            window.localStorage.setItem('user-token', result.data.token)// 获取前端缓存令牌
             this.$router.push('/home')// 跳转到主页
             // 失败后进入catch
           }).catch(error => {
