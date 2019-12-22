@@ -70,7 +70,8 @@ export default {
           method: 'put',
           url: '/comments/status',
           params: {
-            article_id: row.id
+            // 对象装换成字符串
+            article_id: row.id.toString()
           },
           // 请求体放在data中
           data: {
