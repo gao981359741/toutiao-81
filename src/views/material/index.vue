@@ -1,10 +1,18 @@
 <template>
 <!-- 素材管理    基本的页面结构 -->
-  <el-card>
+  <el-card   v-loading="loading">
       <!-- 面包屑组件 -->
       <bread-crumb slot="header">
          <template slot="title">素材管理</template>
       </bread-crumb>
+      <!-- 上传按钮 -->
+        <el-row type='flex' justify="end">
+          <!--  http-request 默认的上传行为，可自定义上传的实现
+         show-file-list是否显示上传文件列表 -->
+        <el-upload :http-request="uploadImg" :show-file-list="false">
+              <el-button  size="small" type="primary">点击上传</el-button>
+        </el-upload>
+    </el-row>
 
         <el-tabs v-model="activeName"  @tab-click="changeTab">
           <el-tab-pane label="全部素材" name="all">
@@ -63,6 +71,7 @@
 export default {
   data () {
     return {
+      loading: false, // 定义一个进度条
       // 默认选中全部
       activeName: 'all',
       list: [], // 接收全部数据
@@ -77,6 +86,24 @@ export default {
     }
   },
   methods: {
+    //   上传图片
+    uploadImg (params) {
+      this.loading = true // 打开进度条
+      let form = new FormData()
+      // params.file  是formDate类型
+      // form.append添加参数
+      form.append('image', params.file) // 添加文件到formData
+      // 调接口
+      this.$axios({
+        method: 'post',
+        url: '/user/images',
+        data: form // formData数据
+      }).then(result => {
+        //   说明已经上传成功了一张图片
+        this.loading = false // 关闭进度条
+        this.getAllMaterial()
+      })
+    },
     changePage (newPage) {
       //  修改当前页码   得到最新页码
       this.page.currentPage = newPage
