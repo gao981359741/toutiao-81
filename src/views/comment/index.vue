@@ -28,7 +28,16 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+    <el-row type="flex" justify="center" align="middle" style="height:80px">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :current-page="page.currentPage"
+        :page-size="page.pageSize"
+        :total="page.total"
+        @current-change="changePage"
+      ></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -36,19 +45,37 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      // 分页
+      page: {
+        // 专门放置分页数据
+        total: 0, // 数据总条数
+        pageSize: 10, // 默认每页10条
+        currentPage: 1 // 当前页码 默认第一页
+      }
     }
   },
   methods: {
+    // 点击页码发生改变
+    changePage (newPage) {
+      //  修改当前页码
+      this.page.currentPage = newPage
+      this.getComment()
+    },
     // 创建一个请求后台数据的方法
     getComment () {
       // axios默认是get类型  所以当method是get类型时，可以不写
       // query也就是查询参数也叫路由参数 地址参数 get参数   一般给params
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: {
+          response_type: 'comment',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
+        }
       }).then(result => {
         this.list = result.data.results // 获取当前列表数据中本身的data
+        this.page.total = result.data.total_count // 获取文章总条数
       })
     },
     // 定义一个布尔值转化方法

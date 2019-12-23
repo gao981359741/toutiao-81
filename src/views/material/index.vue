@@ -9,7 +9,7 @@
         <el-tabs v-model="activeName">
           <el-tab-pane label="全部素材" name="all">
               <!-- 全部素材内容 -->
-
+            {{list}}
           </el-tab-pane>
           <el-tab-pane label="收藏素材" name="collect">
               <!-- 收藏素材内容 -->
@@ -24,11 +24,24 @@ export default {
   data () {
     return {
       // 默认选中全部
-      activeName: 'all'
+      activeName: 'all',
+      list: []// 接收全部数据
     }
   },
   methods: {
-
+    // 获取全部素材
+    getAllMaterial () {
+      this.$axios({
+        url: '/user/image',
+        // Query数据写在params中
+        params: { collect: false }
+      }).then(result => {
+        this.list = result.data.results
+      })
+    }
+  },
+  created () {
+    this.getAllMaterial()
   }
 }
 </script>
