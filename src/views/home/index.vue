@@ -4,7 +4,7 @@
   <el-container>
     <!-- 先左右布局  再把右边做上下布局-->
     <!-- 左侧 -->
-    <el-aside style="background-color:#353b4e;min-height:100vh;width:230px overflow:hidden">
+    <el-aside style="background-color:#353b4e;min-height:100vh;width:230px">
       <layout-aside></layout-aside>
     </el-aside>
     <!-- 右侧 -->
@@ -34,8 +34,8 @@ export default {
 
 <style lang='less' scoped>
 .View{
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  overflow: hidden;
+  // overflow: hidden;
 }
 </style>
