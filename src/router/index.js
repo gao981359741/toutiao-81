@@ -17,13 +17,17 @@ const routes = [
     path: '/home',
     name: 'home',
     component: Home,
+    // 二级路由组件
     children: [{
       path: '', // 二级路由什么都不写  作为显示组件
       component: Home2
     }, {
       // 二级路由表
       path: 'comment',
-      component: () => import('../views/comment')
+      component: () => import('../views/comment')// 按需加载
+    }, {
+      path: 'material', // 素材列表
+      component: () => import('../views/material')
     }]
 
   }, {
