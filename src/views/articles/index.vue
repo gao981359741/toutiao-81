@@ -35,9 +35,7 @@
             label 指的是 el-option显示值
               value指的是 el-option的存储值
           -->
-          <el-option v-for="item in channels" :key="item.id"
-          :label="item.name"
-          :value="item.id"></el-option>
+          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -48,7 +46,7 @@
       <!-- daterange时间范围 -->
       <el-col :span="18">
         <el-date-picker
-        v-model="formData.dateRange"
+          v-model="formData.dateRange"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
@@ -57,30 +55,44 @@
       </el-col>
     </el-row>
     <!-- 下面的用户发表信息 -->
-  <el-row class='total'>
-        <span>共找到1000条符合条件的内容</span>
+    <el-row class="total">
+      <span>共找到1000条符合条件的内容</span>
     </el-row>
 
-      <!-- 循环生成模板 -->
-    <el-row  v-for="item in 100" :key="item" class='article-item' type='flex' justify="space-between">
-        <!-- 左侧 -->
-       <el-col :span="14">
-           <el-row type='flex'>
-             <img src="../../assets/img/404.png" alt="">
-              <div class='info'>
-                <span>年少不听李宗盛，听懂己是不惑年。</span>
-                <el-tag class='tag'>标签一</el-tag>
-                <span class='date'>2019-12-24 09:15:42</span>
-              </div>
-           </el-row>
-       </el-col>
-       <!-- 右侧 -->
-       <el-col :span="6">
-           <el-row class='right' type='flex' justify="end">
-               <span><i class="el-icon-edit"></i>修改</span>
-               <span><i class="el-icon-delete"></i> 删除</span>
-           </el-row>
-       </el-col>
+    <!-- 循环生成模板 -->
+    <el-row
+      v-for="item in list"
+      :key="item.id.toString()"
+      class="article-item"
+      type="flex"
+      justify="space-between"
+    >
+      <!-- 左侧 -->
+      <el-col :span="14">
+        <el-row type="flex">
+          <!-- 当图片的数量大于0时，选择第一张也就是下标为0的，否则选择默认图片
+          这里不写大于0是因为length这里就是一个数字，如果数字是0，就会默认为flase直接:后面的内容 -->
+          <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt />
+          <div class="info">
+            <span>{{item.title}}</span>
+            <!-- 表达式和过滤器名称之间用   |    分割
+            过滤器不但可以在插值表达中使用 还可以在v-bind表达式中使用-->
+            <el-tag :type="item.status|filterType" class="tag">{{ item.status | filterStatus }}</el-tag>
+            <span class="date">{{ item.pubdate }}</span>
+          </div>
+        </el-row>
+      </el-col>
+      <!-- 右侧 -->
+      <el-col :span="6">
+        <el-row class="right" type="flex" justify="end">
+          <span>
+            <i class="el-icon-edit"></i>修改
+          </span>
+          <span>
+            <i class="el-icon-delete"></i> 删除
+          </span>
+        </el-row>
+      </el-col>
     </el-row>
   </el-card>
 </template>
@@ -92,10 +104,49 @@ export default {
       formData: {
         status: 5, // 默认选中全部
         channel_id: null, // 默认是空
-        dateRange: []// 因为要接收两个时间，所以定义一个空数组
+        dateRange: [] // 因为要接收两个时间，所以定义一个空数组
       },
-      channels: []// 定义一个channels空数组  用于接收频道
-
+      channels: [], // 定义一个channels空数组  用于接收频道
+      list: [], // 接收文章列表数据
+      defaultImg: require('../../assets/img/db.jpg')// 默认图片
+    }
+  },
+  // 定义一个局部过滤器  主要为了得到 发布状态
+  filters: {
+    // 处理显示状态
+    filterStatus (value) {
+      // value 是过滤器前面表达式计算得到的值
+      // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
+    },
+    // 这个过滤器为了得到相应状态下对应的属性
+    filterType (value) {
+      // value 是过滤器前面表达式计算得到的值
+      // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+      // 通过case得到一个值，并对应type属性
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return ''
+        case 3:
+          return 'danger'
+        default:
+          break
+      }
     }
   },
   methods: {
@@ -107,11 +158,21 @@ export default {
         // 获取频道内容
         this.channels = result.data.channels
       })
+    },
+    // 获取文章列表数据
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(result => {
+        this.list = result.data.results
+      })
     }
   },
+
   created () {
     // 在这里调用获取频道数据是为了在打开页面后直接渲染
-    this.getChannels()
+    this.getChannels() // 调用获取频道数据
+    this.getArticles() // 调用获取文章列表
   }
 }
 </script>
@@ -123,40 +184,40 @@ export default {
     padding-left: 50px;
   }
   .total {
-      margin:60px 0;
-      height: 30px;
-      border-bottom: 1px dashed #ccc;
+    margin: 60px 0;
+    height: 30px;
+    border-bottom: 1px dashed #ccc;
   }
-   .article-item {
-      margin: 20px 0;
-      padding: 10px 0;
-      border-bottom: 1px solid #f2f3f5;
-      img {
-          width: 180px;
-          height: 100px;
-          margin-right: 10px;
-          border-radius: 4px;
+  .article-item {
+    margin: 20px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #f2f3f5;
+    img {
+      width: 180px;
+      height: 100px;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+    .info {
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .tag {
+        max-width: 60px;
       }
-      .info {
-          height: 100px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          .tag {
-              max-width:80px;
-          }
-          .date {
-              color: #999;
-              font-size:12px;
-          }
+      .date {
+        color: #999;
+        font-size: 12px;
       }
-      .right {
-          span {
-              margin-left:8px;
-              font-size: 14px;
-              cursor: pointer;
-          }
+    }
+    .right {
+      span {
+        margin-left: 8px;
+        font-size: 14px;
+        cursor: pointer;
       }
+    }
   }
 }
 </style>
