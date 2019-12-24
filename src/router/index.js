@@ -23,11 +23,14 @@ const routes = [
       component: Home2
     }, {
       // 二级路由表
-      path: 'comment',
+      path: 'comment', // 评论列表
       component: () => import('../views/comment')// 按需加载
     }, {
       path: 'material', // 素材列表
       component: () => import('../views/material')
+    }, {
+      path: 'articles', // 内容列表
+      component: () => import('../views/articles')
     }]
 
   }, {
