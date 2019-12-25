@@ -13,7 +13,7 @@
       <!-- 单选框组件 -->
       <el-col :span="18">
         <!-- 文章状态status   0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部-->
-        <el-radio-group v-model="formData.status">
+        <el-radio-group @change="changeCondition" v-model="formData.status">
           <!-- 全部，这个5是默认的,在传参的时候判断一下 是不是5 如果是5 就传个null -->
           <el-radio :label="5">全部</el-radio>
           <el-radio :label="0">草稿</el-radio>
@@ -30,7 +30,7 @@
       <!-- 频道列表后面的下拉框 -->
       <el-col :span="18">
         <!-- 通过双向绑定得到被选中的 channel_id-->
-        <el-select v-model="formData.channel_id">
+        <el-select @change="changeCondition" v-model="formData.channel_id">
           <!-- 通过循环获取下拉的内容
             label 指的是 el-option显示值
               value指的是 el-option的存储值
@@ -45,7 +45,10 @@
       </el-col>
       <!-- daterange时间范围 -->
       <el-col :span="18">
+<!-- value-format="yyyy-MM-dd" 指定时间格式-->
         <el-date-picker
+        @change="changeCondition"
+         value-format="yyyy-MM-dd"
           v-model="formData.dateRange"
           type="daterange"
           range-separator="-"
@@ -71,7 +74,7 @@
       <el-col :span="14">
         <el-row type="flex">
           <!-- 当图片的数量大于0时，选择第一张也就是下标为0的，否则选择默认图片
-          这里不写大于0是因为length这里就是一个数字，如果数字是0，就会默认为flase直接:后面的内容 -->
+          这里不写大于0是因为length这里就是一个数字，如果数字是0，就会默认为flase直接:后面的内容-->
           <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt />
           <div class="info">
             <span>{{item.title}}</span>
@@ -108,7 +111,7 @@ export default {
       },
       channels: [], // 定义一个channels空数组  用于接收频道
       list: [], // 接收文章列表数据
-      defaultImg: require('../../assets/img/db.jpg')// 默认图片
+      defaultImg: require('../../assets/img/db.jpg') // 默认图片
     }
   },
   // 定义一个局部过滤器  主要为了得到 发布状态
@@ -150,6 +153,18 @@ export default {
     }
   },
   methods: {
+    // 改变条件
+    changeCondition () {
+      // 组装条件
+      let params = {
+        status: this.formData.status === 5 ? null : this.formData.status, // 不传为全部  5代表全部
+        channel_id: this.formData.channel_id, // 频道
+        begin_pubdate: this.formData.dateRange.length ? this.formData.dateRange[0] : null, // 起始时间
+        end_pubdate: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null // 截止时间
+      }
+      // 重新获取文章数据
+      this.getArticles(params)
+    },
     // 获取频道
     getChannels () {
       this.$axios({
@@ -160,9 +175,10 @@ export default {
       })
     },
     // 获取文章列表数据
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(result => {
         this.list = result.data.results
       })
