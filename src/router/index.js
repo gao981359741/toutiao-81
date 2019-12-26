@@ -32,7 +32,10 @@ const routes = [
       path: 'articles', // 内容列表
       component: () => import('../views/articles')
     }, {
-      path: 'publish', // 发表文章
+      path: 'publish/:articleId', // 定义动态路由参数 此规则只匹配修改文章
+      component: () => import('../views/publish')
+    }, {
+      path: 'publish', // 此规则匹配发布文章
       component: () => import('../views/publish')
     }]
 
