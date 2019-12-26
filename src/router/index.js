@@ -31,6 +31,9 @@ const routes = [
     }, {
       path: 'articles', // 内容列表
       component: () => import('../views/articles')
+    }, {
+      path: 'publish', // 发表文章
+      component: () => import('../views/publish')
     }]
 
   }, {
