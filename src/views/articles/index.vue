@@ -13,7 +13,9 @@
       <!-- 单选框组件 -->
       <el-col :span="18">
         <!-- 文章状态status   0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部-->
-        <el-radio-group @change="changeCondition" v-model="formData.status">
+         <!-- 第一种方式用  @change="changeCondition" 第二种方式 用watch-->
+         <!-- <el-radio-group @change="changeCondition" v-model="formData.status"> -->
+        <el-radio-group  v-model="formData.status">
           <!-- 全部，这个5是默认的,在传参的时候判断一下 是不是5 如果是5 就传个null -->
           <el-radio :label="5">全部</el-radio>
           <el-radio :label="0">草稿</el-radio>
@@ -30,7 +32,8 @@
       <!-- 频道列表后面的下拉框 -->
       <el-col :span="18">
         <!-- 通过双向绑定得到被选中的 channel_id-->
-        <el-select @change="changeCondition" v-model="formData.channel_id">
+         <!-- 第一种方式用  @change="changeCondition" 第二种方式 用watch-->
+        <el-select v-model="formData.channel_id">
           <!-- 通过循环获取下拉的内容
             label 指的是 el-option显示值
               value指的是 el-option的存储值
@@ -46,8 +49,9 @@
       <!-- daterange时间范围 -->
       <el-col :span="18">
 <!-- value-format="yyyy-MM-dd" 指定时间格式-->
+ <!-- 第一种方式用  @change="changeCondition" 第二种方式 用watch-->
         <el-date-picker
-        @change="changeCondition"
+
          value-format="yyyy-MM-dd"
           v-model="formData.dateRange"
           type="daterange"
@@ -129,6 +133,17 @@ export default {
         pageSize: 10, // 文章列表最低10条
         total: 0
       }
+    }
+  },
+  //  用watch   代替原来的@change="changeCondition"事件
+  // watch深度监听  监听对象需要加deep: true和handler触发函数
+  watch: {
+    formData: {
+      handler () {
+        // this指向组件实例 // 触发该函数时 数据已经是最新的了
+        this.changeCondition()
+      },
+      deep: true // 深度检测
     }
   },
   // 定义一个局部过滤器  主要为了得到 发布状态
