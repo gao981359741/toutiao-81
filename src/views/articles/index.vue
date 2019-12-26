@@ -59,7 +59,7 @@
     </el-row>
     <!-- 下面的用户发表信息 -->
     <el-row class="total">
-      <span>共找到1000条符合条件的内容</span>
+      <span>共找到{{page.total}}条符合条件的内容</span>
     </el-row>
 
     <!-- 循环生成模板 -->
@@ -97,6 +97,18 @@
         </el-row>
       </el-col>
     </el-row>
+    <!-- 分页组件 -->
+       <el-row type='flex' justify="center" align="middle" style='height:60px'>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="page.total"
+        :current-page="page.currentPage"
+        :page-size="page.pageSize"
+        @current-change="changePage"
+        >
+        </el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -111,7 +123,12 @@ export default {
       },
       channels: [], // 定义一个channels空数组  用于接收频道
       list: [], // 接收文章列表数据
-      defaultImg: require('../../assets/img/db.jpg') // 默认图片
+      defaultImg: require('../../assets/img/db.jpg'), // 默认图片
+      page: {
+        currentPage: 1, // 当前页码
+        pageSize: 10, // 文章列表最低10条
+        total: 0
+      }
     }
   },
   // 定义一个局部过滤器  主要为了得到 发布状态
@@ -153,10 +170,32 @@ export default {
     }
   },
   methods: {
+    // 改变页码事件
+    changePage (newPage) {
+      // 赋值当前页码
+      this.page.currentPage = newPage // 赋值当前页
+      this.getConditionArticle()
+    },
     // 改变条件
     changeCondition () {
       // 组装条件
+      this.page.currentPage = 1// 强制将当前页码回到第一页
+      // 最新状态
+      this.getConditionArticle()
+      // 下面进行了封装
+      // let params = {
+      //   status: this.formData.status === 5 ? null : this.formData.status, // 不传为全部  5代表全部
+      //   channel_id: this.formData.channel_id, // 频道
+      //   begin_pubdate: this.formData.dateRange.length ? this.formData.dateRange[0] : null, // 起始时间
+      //   end_pubdate: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null // 截止时间
+      // }
+      // 重新获取文章数据
+      // this.getArticles(params)
+    },
+    getConditionArticle () {
       let params = {
+        page: this.page.currentPage, // 分页信息
+        per_page: this.page.pageSize,
         status: this.formData.status === 5 ? null : this.formData.status, // 不传为全部  5代表全部
         channel_id: this.formData.channel_id, // 频道
         begin_pubdate: this.formData.dateRange.length ? this.formData.dateRange[0] : null, // 起始时间
@@ -180,7 +219,9 @@ export default {
         url: '/articles',
         params
       }).then(result => {
+        // 文章列表数据
         this.list = result.data.results
+        this.page.total = result.data.total_count // 文章总数
       })
     }
   },
@@ -188,7 +229,8 @@ export default {
   created () {
     // 在这里调用获取频道数据是为了在打开页面后直接渲染
     this.getChannels() // 调用获取频道数据
-    this.getArticles() // 调用获取文章列表
+
+    this.getArticles({ page: 1, per_page: 10 }) // 调用获取文章列表
   }
 }
 </script>
