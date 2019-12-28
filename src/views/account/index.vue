@@ -31,6 +31,8 @@
 </template>
 
 <script>
+// 引入公共实例
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -71,6 +73,7 @@ export default {
         data
       }).then(result => {
         this.formData.photo = result.data.photo // 设置头像地址
+        eventBus.$emit('updateUserInfoSuccess')// 头像同步更改
         this.loading = false // 关调弹层
       })
     },
@@ -93,11 +96,14 @@ export default {
             method: 'patch',
             data: this.formData
           }).then(result => {
+            eventBus.$emit('updateUserInfoSuccess')// 触发一个自定义事件 updateUserInfoSuccess
+
             //   认为保存成功
             this.$message({
               type: 'success',
               message: '保存信息成功'
             })
+            // 告诉头部组件，我已经更新了，你也要更新
           })
         }
       })

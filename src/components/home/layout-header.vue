@@ -35,11 +35,12 @@
 </template>
 
 <script>
-
+import eventBus from '../../utils/eventBus' // 引入公共实例
 export default {
   data () {
     // 返回值 是对象形式
     return {
+      test: {},
       userInfo: {}, // 用户信息
       defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量
     }
@@ -49,19 +50,34 @@ export default {
     // 获取令牌
     // let token = window.localStorage.getItem('user-token')
     // 查询数据
-    this.$axios({
-      url: '/user/profile'
-      // 传递headers参数
-      // headers: {
-      //   Authorization: `Bearer ${token}`
-      // }
-    }).then(result => {
-      console.log(result)
-      // 返回一个对象   它里面有一个data，data里面还有一个data 才是我们需要的数据
-      this.userInfo = result.data// 获取用户个人信息
+
+    // this.$axios({
+    //   url: '/user/profile'
+    //   // 传递headers参数
+    //   // headers: {
+    //   //   Authorization: `Bearer ${token}`
+    //   // }
+    // }).then(result => {
+    //   // 返回一个对象   它里面有一个data，data里面还有一个data 才是我们需要的数据
+    //   this.userInfo = result.data// 获取用户个人信息
+    // })
+    this.getUserInfo()
+    // 实例创建完毕 立刻监听
+    eventBus.$on('updateUserInfoSuccess', () => {
+      // 别人告诉你他更新了数据 我也应该立刻更新
+      this.getUserInfo()
     })
   },
   methods: {
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+      //   headers参数
+      }).then(result => {
+        this.userInfo = result.data // 获取用户个人信息
+        this.test = result.data.name
+      })
+    },
     handle (command) {
       if (command === 'lgout') {
         // 退出当前页面到登录页面  并删除用户令牌
@@ -71,6 +87,8 @@ export default {
       } else if (command === 'git') {
         // 否则跳转到这个页面
         window.location.href = 'https://www.baidu.com/'
+      } else if (command === 'info') {
+        this.$router.push('/home/account')
       }
     }
   }
